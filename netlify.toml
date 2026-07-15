@@ -1,11 +1,8 @@
 [build]
-  command = "npm install && npm run build"
+  command = "npm run build"
   publish = "dist"
 
-[dev]
-  command = "npm run dev"
-  port = 3000
-
+# SPA + OAuth callback: send all routes to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
