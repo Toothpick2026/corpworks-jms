@@ -57,6 +57,8 @@ const b64url = (bytes) =>
 
 const OneDriveManager = {
   clientId: import.meta.env.VITE_ONEDRIVE_CLIENT_ID || 'b9c9a198-ecad-4041-9f15-ce32f34c0567',
+  // Pin sign-in to the Corpworks tenant (not /common) so Azure can locate the app.
+  tenant: import.meta.env.VITE_ONEDRIVE_TENANT || 'd5d1b2b1-9dd1-4628-b4a8-2b579a657f13',
   redirectUri: import.meta.env.VITE_ONEDRIVE_REDIRECT_URI || `${window.location.origin}/`,
   scopes: ['Files.ReadWrite', 'User.Read', 'offline_access'],
 
@@ -80,13 +82,13 @@ const OneDriveManager = {
       code_challenge: challenge,
       code_challenge_method: 'S256'
     });
-    return `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?${params}`;
+    return `https://login.microsoftonline.com/${this.tenant}/oauth2/v2.0/authorize?${params}`;
   },
 
   async exchangeCodeForToken(code) {
     try {
       const verifier = sessionStorage.getItem('pkce_verifier') || '';
-      const response = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+      const response = await fetch(`https://login.microsoftonline.com/${this.tenant}/oauth2/v2.0/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
