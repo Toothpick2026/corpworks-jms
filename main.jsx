@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, FileText, DollarSign, Truck, Cloud, LogOut, Check, AlertCircle, Loader, X, Trash2, Pencil } from 'lucide-react';
+import { LayoutDashboard, Calendar, FileText, DollarSign, Truck, Cloud, LogOut, Check, AlertCircle, Loader, X, Trash2, Pencil, Plus } from 'lucide-react';
 
 // ============================================================================
 // CONSTANTS & HELPERS
@@ -132,7 +132,7 @@ const OneDriveManager = {
 // MAIN APP COMPONENT
 // ============================================================================
 export default function App() {
-  const [activeTab, setActiveTab] = useState('tracker');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [oneDriveToken, setOneDriveToken] = useState(localStorage.getItem('onedrive_token'));
   const [uploadStatus, setUploadStatus] = useState(null);
   const [jobs, setJobs] = useState(() => {
@@ -315,19 +315,19 @@ export default function App() {
 <head>
   <style>
     body { font-family: Arial, sans-serif; margin: 30px; color: #333; }
-    .header { background: linear-gradient(135deg, #0078d4 0%, #0063b1 100%); color: white; padding: 25px; border-radius: 5px; margin-bottom: 30px; }
+    .header { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); color: white; padding: 25px; border-radius: 5px; margin-bottom: 30px; }
     .header h1 { margin: 0; font-size: 28px; }
     .header p { margin: 5px 0 0 0; opacity: 0.9; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-    .info-label { font-weight: bold; color: #0078d4; font-size: 12px; text-transform: uppercase; }
+    .info-label { font-weight: bold; color: #ea580c; font-size: 12px; text-transform: uppercase; }
     .info-value { font-size: 16px; margin-top: 3px; }
     table { width: 100%; border-collapse: collapse; margin: 30px 0; }
     th { background-color: #f0f0f0; border: 1px solid #ddd; padding: 12px; text-align: left; font-weight: bold; }
     td { border: 1px solid #ddd; padding: 12px; }
     tr:nth-child(even) { background-color: #fafafa; }
-    .summary { background: #f9f9f9; border-left: 4px solid #0078d4; padding: 20px; margin-top: 30px; }
+    .summary { background: #f9f9f9; border-left: 4px solid #ea580c; padding: 20px; margin-top: 30px; }
     .summary div { margin: 4px 0; }
-    .total-row { font-size: 18px; font-weight: bold; color: #0078d4; text-align: right; margin-top: 8px; }
+    .total-row { font-size: 18px; font-weight: bold; color: #ea580c; text-align: right; margin-top: 8px; }
     .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666; }
   </style>
 </head>
@@ -345,7 +345,7 @@ export default function App() {
   </div>
   ${quote.notes ? `<p><strong>Notes:</strong> ${esc(quote.notes)}</p>` : ''}
 
-  <h3 style="color: #0078d4;">Line Items</h3>
+  <h3 style="color: #ea580c;">Line Items</h3>
   <table>
     <tr><th>Description</th><th style="width: 80px;">Qty</th><th style="width: 100px;">Rate</th><th style="width: 100px;">Total</th></tr>
     ${itemsHtml}
@@ -374,10 +374,10 @@ export default function App() {
 <head>
   <style>
     body { font-family: Arial, sans-serif; margin: 30px; color: #333; }
-    .header { background: linear-gradient(135deg, #0078d4 0%, #0063b1 100%); color: white; padding: 25px; border-radius: 5px; margin-bottom: 30px; }
+    .header { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); color: white; padding: 25px; border-radius: 5px; margin-bottom: 30px; }
     .header h1 { margin: 0; font-size: 28px; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-    .info-label { font-weight: bold; color: #0078d4; font-size: 12px; text-transform: uppercase; }
+    .info-label { font-weight: bold; color: #ea580c; font-size: 12px; text-transform: uppercase; }
     .info-value { font-size: 16px; margin-top: 3px; }
     .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; }
     .status.completed { background: #d4edda; color: #155724; }
@@ -406,43 +406,44 @@ export default function App() {
   };
 
   // ========================================================================
-  // RENDER SECTIONS
+  // RENDER SECTIONS  (presentation only — RoofPro design system)
   // ========================================================================
   const statusPill = (status) => (
-    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-      status === 'Completed' ? 'bg-green-100 text-green-800' :
-      status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-      'bg-yellow-100 text-yellow-800'
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+      status === 'Completed' ? 'bg-green-100 text-green-700' :
+      status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+      'bg-amber-100 text-amber-700'
     }`}>
+      <span className="w-1.5 h-1.5 rounded-full bg-current" />
       {status}
     </span>
   );
 
   const renderJobModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setEditingJob(null)}>
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <div className="flex justify-between items-center border-b p-5">
-          <h3 className="text-xl font-bold text-gray-900">Edit {editingJob.jobNumber}</h3>
-          <button onClick={() => setEditingJob(null)} className="text-gray-400 hover:text-gray-700"><X size={22} /></button>
+    <div className="fixed inset-0 bg-slate-900/50 flex items-start justify-center z-50 p-4 pt-16 overflow-auto" onClick={() => setEditingJob(null)}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-center border-b border-slate-200 p-5">
+          <h3 className="text-lg font-bold text-slate-900">Edit {editingJob.jobNumber}</h3>
+          <button onClick={() => setEditingJob(null)} className="text-slate-400 hover:text-slate-700"><X size={22} /></button>
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-700">Client</label>
+            <label className="block text-sm font-semibold mb-1 text-slate-700">Client</label>
             <input
               type="text"
               value={editingJob.client}
               onChange={(e) => setEditingJob({ ...editingJob, client: e.target.value })}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               placeholder="Client name"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold mb-1 text-gray-700">Status</label>
+              <label className="block text-sm font-semibold mb-1 text-slate-700">Status</label>
               <select
                 value={editingJob.status}
                 onChange={(e) => setEditingJob({ ...editingJob, status: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option>New</option>
                 <option>In Progress</option>
@@ -450,27 +451,27 @@ export default function App() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-bold mb-1 text-gray-700">Assigned To</label>
+              <label className="block text-sm font-semibold mb-1 text-slate-700">Assigned To</label>
               <input
                 type="text"
                 value={editingJob.assignedTo}
                 onChange={(e) => setEditingJob({ ...editingJob, assignedTo: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Technician"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-bold mb-1 text-gray-700">Notes</label>
+            <label className="block text-sm font-semibold mb-1 text-slate-700">Notes</label>
             <textarea
               value={editingJob.notes}
               onChange={(e) => setEditingJob({ ...editingJob, notes: e.target.value })}
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
         </div>
-        <div className="flex justify-between items-center border-t p-5">
+        <div className="flex justify-between items-center border-t border-slate-200 p-5">
           <button
             onClick={() => handleDeleteJob(editingJob.id)}
             className="text-red-600 hover:text-red-800 font-semibold flex items-center gap-1"
@@ -478,8 +479,8 @@ export default function App() {
             <Trash2 size={16} /> Delete
           </button>
           <div className="flex gap-2">
-            <button onClick={() => setEditingJob(null)} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold">Cancel</button>
-            <button onClick={handleSaveJob} className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 font-semibold">Save</button>
+            <button onClick={() => setEditingJob(null)} className="px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold">Cancel</button>
+            <button onClick={handleSaveJob} className="px-4 py-2 rounded-lg bg-orange-600 text-white hover:bg-orange-700 font-semibold">Save</button>
           </div>
         </div>
       </div>
@@ -491,21 +492,21 @@ export default function App() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {columns.map(col => (
-          <div key={col} className="bg-gray-100 rounded-lg p-3">
-            <h3 className="font-bold text-gray-700 mb-3 flex items-center justify-between">
+          <div key={col} className="bg-slate-100 rounded-xl p-3">
+            <h3 className="font-semibold text-slate-700 mb-3 flex items-center justify-between text-sm">
               {col}
-              <span className="text-xs bg-white rounded-full px-2 py-0.5">{jobs.filter(j => j.status === col).length}</span>
+              <span className="text-xs bg-white rounded-full px-2 py-0.5 text-slate-500">{jobs.filter(j => j.status === col).length}</span>
             </h3>
             <div className="space-y-2 min-h-[60px]">
               {jobs.filter(j => j.status === col).map(job => (
                 <div
                   key={job.id}
                   onClick={() => setEditingJob(job)}
-                  className="bg-white rounded-lg p-3 shadow-sm cursor-pointer hover:shadow-md transition"
+                  className="bg-white rounded-lg p-3 border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-orange-200 transition"
                 >
-                  <p className="font-mono text-xs text-gray-500">{job.jobNumber}</p>
-                  <p className="font-semibold text-gray-900">{job.client || '—'}</p>
-                  <p className="text-sm text-gray-500">{job.assignedTo || 'Unassigned'}</p>
+                  <p className="font-mono text-xs text-slate-400">{job.jobNumber}</p>
+                  <p className="font-semibold text-slate-900">{job.client || '—'}</p>
+                  <p className="text-sm text-slate-500">{job.assignedTo || 'Unassigned'}</p>
                 </div>
               ))}
             </div>
@@ -515,60 +516,119 @@ export default function App() {
     );
   };
 
+  const renderDashboard = () => {
+    const count = (s) => jobs.filter(j => j.status === s).length;
+    const active = jobs.filter(j => j.status !== 'Completed');
+    const stats = [
+      { label: 'Total jobs', value: jobs.length, hint: `${count('New')} new` },
+      { label: 'In progress', value: count('In Progress'), hint: 'currently on site' },
+      { label: 'Completed', value: count('Completed'), hint: 'all time' },
+      { label: 'Quotes saved', value: quotes.length, hint: 'to OneDrive' },
+    ];
+    return (
+      <div className="space-y-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map(s => (
+            <div key={s.label} className="bg-white border border-slate-200 rounded-xl p-5">
+              <div className="text-sm text-slate-500 font-medium">{s.label}</div>
+              <div className="text-3xl font-bold text-slate-900 mt-1">{s.value}</div>
+              <div className="text-xs text-slate-400 mt-1">{s.hint}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+            <h3 className="font-semibold text-slate-900">Active jobs</h3>
+            <button onClick={() => setActiveTab('tracker')} className="text-sm font-semibold text-white bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded-lg">View tracker</button>
+          </div>
+          {active.length === 0 ? (
+            <div className="text-center py-12 text-slate-400">
+              <LayoutDashboard size={40} className="mx-auto mb-3 opacity-30" />
+              <p className="font-semibold">No active jobs</p>
+              <p className="text-sm">Create one from the Job Tracker</p>
+            </div>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-50">
+                  <th className="text-left text-xs uppercase tracking-wide text-slate-500 font-semibold px-5 py-3">Job #</th>
+                  <th className="text-left text-xs uppercase tracking-wide text-slate-500 font-semibold px-5 py-3">Client</th>
+                  <th className="text-left text-xs uppercase tracking-wide text-slate-500 font-semibold px-5 py-3">Status</th>
+                  <th className="text-left text-xs uppercase tracking-wide text-slate-500 font-semibold px-5 py-3">Assigned</th>
+                </tr>
+              </thead>
+              <tbody>
+                {active.map(job => (
+                  <tr key={job.id} className="border-t border-slate-100 hover:bg-orange-50/40 cursor-pointer" onClick={() => setEditingJob(job)}>
+                    <td className="px-5 py-3 font-mono text-sm text-slate-500">{job.jobNumber}</td>
+                    <td className="px-5 py-3 font-medium">{job.client || '—'}</td>
+                    <td className="px-5 py-3">{statusPill(job.status)}</td>
+                    <td className="px-5 py-3 text-slate-500">{job.assignedTo || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderJobTracker = () => (
-    <div className="bg-white rounded-lg p-6 shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-xl p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Job Tracker</h2>
-        <button onClick={handleAddJob} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">
-          + New Job
+        <h2 className="text-xl font-bold text-slate-900">Job Tracker</h2>
+        <button onClick={handleAddJob} className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 font-semibold flex items-center gap-1">
+          <Plus size={18} /> New Job
         </button>
       </div>
-      <div className="mb-4 flex gap-2">
+      <div className="mb-5 flex gap-1 border-b border-slate-200">
         <button
           onClick={() => setViewMode('list')}
-          className={`px-4 py-2 rounded-lg font-semibold transition ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          className={`px-4 py-2 font-semibold text-sm transition border-b-2 -mb-px ${viewMode === 'list' ? 'text-orange-600 border-orange-600' : 'text-slate-500 border-transparent hover:text-slate-700'}`}
         >
           List View
         </button>
         <button
           onClick={() => setViewMode('kanban')}
-          className={`px-4 py-2 rounded-lg font-semibold transition ${viewMode === 'kanban' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+          className={`px-4 py-2 font-semibold text-sm transition border-b-2 -mb-px ${viewMode === 'kanban' ? 'text-orange-600 border-orange-600' : 'text-slate-500 border-transparent hover:text-slate-700'}`}
         >
           Kanban
         </button>
       </div>
 
       {jobs.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-slate-400">
           <FileText size={48} className="mx-auto mb-4 opacity-30" />
           <p className="font-semibold">No jobs yet</p>
           <p className="text-sm">Create one to get started</p>
         </div>
       ) : viewMode === 'list' ? (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border border-slate-200 rounded-xl">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-100 border-b">
-                <th className="p-3 text-left font-semibold">Job #</th>
-                <th className="p-3 text-left font-semibold">Client</th>
-                <th className="p-3 text-left font-semibold">Status</th>
-                <th className="p-3 text-left font-semibold">Assigned</th>
-                <th className="p-3 text-left font-semibold">Actions</th>
+              <tr className="bg-slate-50">
+                <th className="px-4 py-3 text-left text-xs uppercase tracking-wide font-semibold text-slate-500">Job #</th>
+                <th className="px-4 py-3 text-left text-xs uppercase tracking-wide font-semibold text-slate-500">Client</th>
+                <th className="px-4 py-3 text-left text-xs uppercase tracking-wide font-semibold text-slate-500">Status</th>
+                <th className="px-4 py-3 text-left text-xs uppercase tracking-wide font-semibold text-slate-500">Assigned</th>
+                <th className="px-4 py-3 text-left text-xs uppercase tracking-wide font-semibold text-slate-500">Actions</th>
               </tr>
             </thead>
             <tbody>
               {jobs.map(job => (
-                <tr key={job.id} className="border-b hover:bg-gray-50 cursor-pointer" onClick={() => setEditingJob(job)}>
-                  <td className="p-3 font-mono text-sm">{job.jobNumber}</td>
-                  <td className="p-3">{job.client || '—'}</td>
-                  <td className="p-3">{statusPill(job.status)}</td>
-                  <td className="p-3">{job.assignedTo || '—'}</td>
-                  <td className="p-3">
+                <tr key={job.id} className="border-t border-slate-100 hover:bg-orange-50/40 cursor-pointer" onClick={() => setEditingJob(job)}>
+                  <td className="px-4 py-3 font-mono text-sm text-slate-500">{job.jobNumber}</td>
+                  <td className="px-4 py-3 font-medium">{job.client || '—'}</td>
+                  <td className="px-4 py-3">{statusPill(job.status)}</td>
+                  <td className="px-4 py-3 text-slate-500">{job.assignedTo || '—'}</td>
+                  <td className="px-4 py-3">
                     <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-                      <button onClick={() => setEditingJob(job)} className="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1">
+                      <button onClick={() => setEditingJob(job)} className="text-slate-600 hover:text-orange-600 text-sm font-semibold flex items-center gap-1">
                         <Pencil size={16} /> Edit
                       </button>
-                      <button onClick={() => handleSaveJobSheetToOneDrive(job)} className="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1 disabled:opacity-40" disabled={!oneDriveToken}>
+                      <button onClick={() => handleSaveJobSheetToOneDrive(job)} className="text-slate-600 hover:text-orange-600 text-sm font-semibold flex items-center gap-1 disabled:opacity-40" disabled={!oneDriveToken}>
                         <Cloud size={16} /> Save
                       </button>
                       <button onClick={() => handleDeleteJob(job.id)} className="text-red-600 hover:text-red-800 text-sm font-semibold flex items-center gap-1">
@@ -590,55 +650,55 @@ export default function App() {
   const renderQuoteBuilder = () => {
     const t = computeQuoteTotals(currentQuote);
     return (
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-2xl font-bold mb-6 text-gray-900">Quote Builder</h2>
-        <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="bg-white border border-slate-200 rounded-xl p-6">
+        <h2 className="text-xl font-bold mb-6 text-slate-900">Quote Builder</h2>
+        <div className="grid grid-cols-2 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Quote Number</label>
-            <input type="text" value={currentQuote.quoteNum} onChange={(e) => setCurrentQuote({ ...currentQuote, quoteNum: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="QT-001" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Quote Number</label>
+            <input type="text" value={currentQuote.quoteNum} onChange={(e) => setCurrentQuote({ ...currentQuote, quoteNum: e.target.value })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" placeholder="QT-001" />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Date</label>
-            <input type="date" value={currentQuote.date} onChange={(e) => setCurrentQuote({ ...currentQuote, date: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Date</label>
+            <input type="date" value={currentQuote.date} onChange={(e) => setCurrentQuote({ ...currentQuote, date: e.target.value })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Client</label>
-            <input type="text" value={currentQuote.client} onChange={(e) => setCurrentQuote({ ...currentQuote, client: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Client</label>
+            <input type="text" value={currentQuote.client} onChange={(e) => setCurrentQuote({ ...currentQuote, client: e.target.value })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">End Client / Site</label>
-            <input type="text" value={currentQuote.endClient} onChange={(e) => setCurrentQuote({ ...currentQuote, endClient: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">End Client / Site</label>
+            <input type="text" value={currentQuote.endClient} onChange={(e) => setCurrentQuote({ ...currentQuote, endClient: e.target.value })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-bold mb-3 text-gray-700">Line Items</label>
-          <div className="overflow-x-auto mb-4 border border-gray-200 rounded-lg">
+        <div className="mb-5">
+          <label className="block text-sm font-semibold mb-3 text-slate-700">Line Items</label>
+          <div className="overflow-x-auto mb-4 border border-slate-200 rounded-xl">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border-r p-3 text-left font-semibold text-sm">Description</th>
-                  <th className="border-r p-3 text-left font-semibold text-sm w-20">Qty</th>
-                  <th className="border-r p-3 text-left font-semibold text-sm w-24">Rate $</th>
-                  <th className="border-r p-3 text-left font-semibold text-sm w-24">Total</th>
-                  <th className="p-3 text-left font-semibold text-sm w-16">Action</th>
+                <tr className="bg-slate-50">
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wide text-slate-500">Description</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wide text-slate-500 w-20">Qty</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wide text-slate-500 w-24">Rate $</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wide text-slate-500 w-24">Total</th>
+                  <th className="p-3 text-left font-semibold text-xs uppercase tracking-wide text-slate-500 w-16">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {currentQuote.lineItems.map((item, idx) => (
-                  <tr key={idx} className="border-t">
-                    <td className="border-r p-3">
-                      <input type="text" value={item.description} onChange={(e) => handleUpdateLineItem(idx, 'description', e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <tr key={idx} className="border-t border-slate-100">
+                    <td className="p-3">
+                      <input type="text" value={item.description} onChange={(e) => handleUpdateLineItem(idx, 'description', e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
                     </td>
-                    <td className="border-r p-3">
-                      <input type="number" min="0" value={item.qty} onChange={(e) => handleUpdateLineItem(idx, 'qty', e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <td className="p-3">
+                      <input type="number" min="0" value={item.qty} onChange={(e) => handleUpdateLineItem(idx, 'qty', e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
                     </td>
-                    <td className="border-r p-3">
-                      <input type="number" min="0" value={item.rate} onChange={(e) => handleUpdateLineItem(idx, 'rate', e.target.value)} className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <td className="p-3">
+                      <input type="number" min="0" value={item.rate} onChange={(e) => handleUpdateLineItem(idx, 'rate', e.target.value)} className="w-full border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
                     </td>
-                    <td className="border-r p-3 text-sm text-right font-semibold">${((Number(item.qty) || 0) * (Number(item.rate) || 0)).toFixed(2)}</td>
+                    <td className="p-3 text-sm text-right font-semibold">${((Number(item.qty) || 0) * (Number(item.rate) || 0)).toFixed(2)}</td>
                     <td className="p-3 text-center">
                       <button onClick={() => handleRemoveLineItem(idx)} className="text-red-600 hover:text-red-800 font-semibold text-sm">Remove</button>
                     </td>
@@ -647,64 +707,65 @@ export default function App() {
               </tbody>
             </table>
           </div>
-          <button onClick={handleAddLineItem} className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-semibold text-sm">+ Add Line Item</button>
+          <button onClick={handleAddLineItem} className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-50 font-semibold text-sm">+ Add Line Item</button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Freight $</label>
-            <input type="number" min="0" value={currentQuote.freight} onChange={(e) => setCurrentQuote({ ...currentQuote, freight: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Freight $</label>
+            <input type="number" min="0" value={currentQuote.freight} onChange={(e) => setCurrentQuote({ ...currentQuote, freight: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Travel Hours</label>
-            <input type="number" min="0" value={currentQuote.travelHours} onChange={(e) => setCurrentQuote({ ...currentQuote, travelHours: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Travel Hours</label>
+            <input type="number" min="0" value={currentQuote.travelHours} onChange={(e) => setCurrentQuote({ ...currentQuote, travelHours: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">Travel Rate $/hr</label>
-            <input type="number" min="0" value={currentQuote.travelRate} onChange={(e) => setCurrentQuote({ ...currentQuote, travelRate: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-sm font-semibold mb-2 text-slate-700">Travel Rate $/hr</label>
+            <input type="number" min="0" value={currentQuote.travelRate} onChange={(e) => setCurrentQuote({ ...currentQuote, travelRate: Math.max(0, parseFloat(e.target.value) || 0) })} className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500" />
           </div>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg mb-6">
+        <div className="bg-orange-50 border border-orange-200 p-6 rounded-xl mb-6">
           <div className="text-right space-y-1">
-            <p className="text-sm text-gray-600">Subtotal: <span className="font-bold">${t.subtotal.toFixed(2)}</span></p>
-            {t.freight > 0 && <p className="text-sm text-gray-600">Freight: <span className="font-bold">${t.freight.toFixed(2)}</span></p>}
-            {t.travel > 0 && <p className="text-sm text-gray-600">Travel: <span className="font-bold">${t.travel.toFixed(2)}</span></p>}
-            <p className="text-sm text-gray-600">GST (15%): <span className="font-bold">${t.gst.toFixed(2)}</span></p>
-            <p className="text-2xl font-bold text-blue-600">Total (incl. GST): ${t.total.toFixed(2)}</p>
+            <p className="text-sm text-slate-600">Subtotal: <span className="font-bold">${t.subtotal.toFixed(2)}</span></p>
+            {t.freight > 0 && <p className="text-sm text-slate-600">Freight: <span className="font-bold">${t.freight.toFixed(2)}</span></p>}
+            {t.travel > 0 && <p className="text-sm text-slate-600">Travel: <span className="font-bold">${t.travel.toFixed(2)}</span></p>}
+            <p className="text-sm text-slate-600">GST (15%): <span className="font-bold">${t.gst.toFixed(2)}</span></p>
+            <p className="text-2xl font-bold text-orange-600">Total (incl. GST): ${t.total.toFixed(2)}</p>
           </div>
         </div>
 
         <div className="flex gap-3">
-          <button onClick={handleSaveQuoteToOneDrive} disabled={!oneDriveToken} className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+          <button onClick={handleSaveQuoteToOneDrive} disabled={!oneDriveToken} className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
             <Cloud size={18} /> Save to OneDrive
           </button>
-          <button onClick={clearQuoteForm} className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-semibold">Clear</button>
+          <button onClick={clearQuoteForm} className="bg-white border border-slate-300 text-slate-700 px-6 py-3 rounded-lg hover:bg-slate-50 font-semibold">Clear</button>
         </div>
       </div>
     );
   };
 
+  // Compact OneDrive banner shown at the top of the content area
   const renderOneDriveStatus = () => (
-    <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-5 mb-6">
+    <div className="bg-white border border-slate-200 rounded-xl p-4 mb-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-full ${oneDriveToken ? 'bg-green-200' : 'bg-gray-200'}`}>
-            <Cloud size={24} className={oneDriveToken ? 'text-green-600' : 'text-gray-600'} />
+          <div className={`p-3 rounded-full ${oneDriveToken ? 'bg-green-100' : 'bg-slate-100'}`}>
+            <Cloud size={22} className={oneDriveToken ? 'text-green-600' : 'text-slate-500'} />
           </div>
           <div>
-            <p className="font-bold text-gray-900">OneDrive Integration</p>
-            <p className="text-sm text-gray-700">
+            <p className="font-bold text-slate-900">OneDrive Integration</p>
+            <p className="text-sm text-slate-500">
               {oneDriveToken ? '✓ Connected and ready to sync' : 'Connect to enable automatic file uploads'}
             </p>
           </div>
         </div>
         {!oneDriveToken ? (
-          <button onClick={initiateOneDriveAuth} className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2 whitespace-nowrap">
+          <button onClick={initiateOneDriveAuth} className="bg-orange-600 text-white px-5 py-2.5 rounded-lg hover:bg-orange-700 font-semibold flex items-center gap-2 whitespace-nowrap">
             <Cloud size={18} /> Connect OneDrive
           </button>
         ) : (
-          <button onClick={handleDisconnectOneDrive} className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-semibold flex items-center gap-2 whitespace-nowrap">
+          <button onClick={handleDisconnectOneDrive} className="bg-white border border-slate-300 text-slate-700 px-5 py-2.5 rounded-lg hover:bg-slate-50 font-semibold flex items-center gap-2 whitespace-nowrap">
             <LogOut size={18} /> Disconnect
           </button>
         )}
@@ -714,7 +775,7 @@ export default function App() {
           uploadStatus.type === 'success' ? 'bg-green-100 text-green-800' :
           uploadStatus.type === 'error' ? 'bg-red-100 text-red-800' :
           uploadStatus.type === 'loading' ? 'bg-blue-100 text-blue-800' :
-          'bg-gray-100 text-gray-800'
+          'bg-slate-100 text-slate-800'
         }`}>
           {uploadStatus.type === 'loading' && <Loader size={18} className="animate-spin flex-shrink-0" />}
           {uploadStatus.type === 'success' && <Check size={18} className="flex-shrink-0" />}
@@ -725,63 +786,94 @@ export default function App() {
     </div>
   );
 
+  // ---- Layout --------------------------------------------------------------
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'tracker', label: 'Job Tracker', icon: FileText },
+    { id: 'quoting', label: 'Quote Builder', icon: DollarSign },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
+    { id: 'van', label: 'Van View', icon: Truck },
+  ];
+  const titles = {
+    dashboard: ['Dashboard', 'Your business at a glance'],
+    tracker: ['Job Tracker', 'All jobs'],
+    quoting: ['Quote Builder', 'Build and save quotes'],
+    calendar: ['Calendar', 'Scheduling'],
+    van: ['Van View', 'Van assignments'],
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+    <div className="min-h-screen flex bg-slate-50 text-slate-900">
+      {/* Sidebar */}
+      <aside className="w-60 bg-slate-900 text-slate-300 flex flex-col fixed inset-y-0 left-0">
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-800">
+          <div className="w-9 h-9 rounded-lg bg-orange-600 text-white flex items-center justify-center font-extrabold text-lg">C</div>
           <div>
-            <h1 className="text-4xl font-bold">Corpworks JMS</h1>
-            <p className="text-blue-100 text-sm">Job Management System + OneDrive</p>
+            <div className="text-white font-bold leading-tight">Corpworks JMS</div>
+            <div className="text-xs text-slate-500">Job Management</div>
+          </div>
+        </div>
+        <nav className="flex-1 p-3 space-y-1 overflow-auto">
+          {navItems.map(n => {
+            const Icon = n.icon;
+            return (
+              <button
+                key={n.id}
+                onClick={() => setActiveTab(n.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                  activeTab === n.id ? 'bg-orange-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <Icon size={18} /> {n.label}
+              </button>
+            );
+          })}
+        </nav>
+        <div className="px-5 py-4 border-t border-slate-800 text-xs text-slate-500 flex items-center gap-2">
+          <Cloud size={14} className={oneDriveToken ? 'text-green-400' : 'text-slate-500'} />
+          {oneDriveToken ? 'OneDrive connected' : 'OneDrive offline'}
+        </div>
+      </aside>
+
+      {/* Main */}
+      <div className="flex-1 ml-60 min-w-0">
+        <header className="bg-white border-b border-slate-200 px-7 py-4 flex items-center justify-between sticky top-0 z-10">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900">{titles[activeTab][0]}</h1>
+            <p className="text-sm text-slate-500">{titles[activeTab][1]}</p>
           </div>
           <div className="flex items-center gap-4 text-sm">
             {oneDriveToken && (
-              <div className="flex items-center gap-2 bg-blue-500 bg-opacity-30 px-3 py-2 rounded-lg">
-                <Cloud size={18} className="text-green-300" />
-                <span>OneDrive Ready</span>
+              <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-lg font-medium">
+                <Cloud size={16} /> OneDrive Ready
               </div>
             )}
-            <span>{new Date().toLocaleDateString()}</span>
+            <span className="text-slate-500">{new Date().toLocaleDateString()}</span>
           </div>
-        </div>
-      </header>
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {renderOneDriveStatus()}
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {[
-            { id: 'tracker', label: 'Job Tracker', icon: FileText },
-            { id: 'quoting', label: 'Quote Builder', icon: DollarSign },
-            { id: 'calendar', label: 'Calendar', icon: Calendar },
-            { id: 'van', label: 'Van View', icon: Truck }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 ${
-                activeTab === tab.id ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-              }`}
-            >
-              <tab.icon size={18} /> {tab.label}
-            </button>
-          ))}
-        </div>
+        </header>
 
-        {activeTab === 'tracker' && renderJobTracker()}
-        {activeTab === 'quoting' && renderQuoteBuilder()}
-        {activeTab === 'calendar' && (
-          <div className="bg-white rounded-lg p-8 shadow-sm text-center">
-            <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Calendar View</h2>
-            <p className="text-gray-600">Calendar integration coming soon...</p>
-          </div>
-        )}
-        {activeTab === 'van' && (
-          <div className="bg-white rounded-lg p-8 shadow-sm text-center">
-            <Truck size={48} className="mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Van View</h2>
-            <p className="text-gray-600">Van assignments and tracking coming soon...</p>
-          </div>
-        )}
-      </main>
+        <main className="px-7 py-6 max-w-6xl">
+          {renderOneDriveStatus()}
+
+          {activeTab === 'dashboard' && renderDashboard()}
+          {activeTab === 'tracker' && renderJobTracker()}
+          {activeTab === 'quoting' && renderQuoteBuilder()}
+          {activeTab === 'calendar' && (
+            <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
+              <Calendar size={48} className="mx-auto mb-4 text-slate-300" />
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Calendar View</h2>
+              <p className="text-slate-500">Calendar integration coming soon...</p>
+            </div>
+          )}
+          {activeTab === 'van' && (
+            <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
+              <Truck size={48} className="mx-auto mb-4 text-slate-300" />
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Van View</h2>
+              <p className="text-slate-500">Van assignments and tracking coming soon...</p>
+            </div>
+          )}
+        </main>
+      </div>
 
       {editingJob && renderJobModal()}
     </div>
